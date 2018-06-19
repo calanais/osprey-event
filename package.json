@@ -1,0 +1,12 @@
+{
+  "name": "osprey-event",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "php -S localhost:8000 -t ./filepond/public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
