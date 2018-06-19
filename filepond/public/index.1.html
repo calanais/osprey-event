@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>FilePond Sample Project</title>
+
+    <!-- Get FilePond styles from the CDN -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
+    <style>
+        /* FilePond will automatically fill up all available horizontal space, best to limit it in some way */
+        form {
+            max-width:24em;
+        }
+
+        .my-pond {
+            max-width:24em;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="my-pond">
+    </div>
+    <form action="api/submit.php" method="post" enctype="multipart/form-data">
+
+        <input type="file" name="filepond[]" multiple>
+        <button type="submit">Submit</button>
+    
+    </form>
+
+    <button id="go">GO</button>
+
+    <!-- Get FilePond polyfills from the CDN -->
+    <script src="https://unpkg.com/filepond-polyfill/dist/filepond-polyfill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+    <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
+
+    <!-- Get FilePond JavaScript from the CDN -->
+
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+    <script>
+    $(function(){
+
+    // Turn input element into a pond
+    $('.my-pond').filepond();
+
+    // Turn input element into a pond with configuration options
+    $('.my-pond').filepond({
+        server: { url: 'api/',instantUpload: true},
+        imageResizeTargetHeight: 600,
+        imageResizeTargetWidth: 600
+    });
+
+
+    // Listen for addfile event
+    $('.my-pond').on('FilePond:addfile', function(e) {
+        console.log('file added event', e);
+    });
+
+
+  
+  });
+   
+
+    </script>
+
+</body>
+</html>

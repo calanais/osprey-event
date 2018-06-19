@@ -341,6 +341,22 @@ class RequestHandler
 
     }
 
+    public static function getFiles($path) {
+
+        try {
+            $filenames = scandir($path);
+            $filtered = array_filter($filenames, function ($var) {
+                return (preg_match("/.*(png|jpg)/",$var));
+            });
+            
+            return array_values($filtered);
+        }
+        catch(Exception $e) {
+            return null;
+        }
+
+    }
+
     private static function saveFile($item, $path) {
 
         // nope

@@ -30,7 +30,8 @@ function handleGET() {
     $handlers = array(
         'fetch' => 'handleFetch',
         'restore' => 'handleRestore',
-        'load' => 'handleLoad'
+        'load' => 'handleLoad',
+        'names' => 'handleNames'
     );
     foreach ($handlers as $param => $handler) {
         if (isset($_GET[$param])) {
@@ -77,7 +78,36 @@ function handleLoad($id) {
     header('Content-Disposition: inline; filename="' . $file['name'] . '"');
     echo $file['content'];
 }
+/**
+ * Handle loading of already saved files
+ */
+function handleNames($id) {
 
+
+
+    // 
+    // In this example implementation the file id is simply the filename and 
+    // we request the file from the uploads folder, it could very well be 
+    // that the file should be fetched from a database or other system.
+    //
+
+    // Let's get the temp file content
+    $filenames = FilePond\RequestHandler::getFiles('uploads');
+
+    $arr = array('filenames'=>$filenames);
+    // Server error while reading the file
+    if ($filenames === null) {
+
+        // Nope, Bail out
+        http_response_code(500);
+        return;
+    }
+
+    // Return file
+    // Allow to read Content Disposition (so we can read the file name on the client side)
+    header('Access-Control-Expose-Headers: Content-Disposition');
+    echo json_encode($arr);
+}
 
 /**
  * Handle restoring of temporary files

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
@@ -11,38 +12,88 @@
 
     <style>
         /* FilePond will automatically fill up all available horizontal space, best to limit it in some way */
+
         form {
-            max-width:24em;
+            max-width: 24em;
         }
     </style>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
+    <link href="gallery.css" rel="stylesheet"></link>
 </head>
+
 <body>
-    
-    <form action="api/submit.php" method="post" enctype="multipart/form-data">
 
-        <input type="file" name="filepond[]" multiple>
+     <!-- <form action="api/submit.php" method="post" enctype="multipart/form-data">  -->
 
-        <button type="submit">Submit</button>
-    
-    </form>
+        <input type="file" name="filepond[]" 
+        accept="image/png, image/jpeg, image/gif">
+  
+
+    <!-- </form> -->
+    <div class="grid">
+        <div class="grid-sizer"></div>
+      </div>
 
     <!-- Get FilePond polyfills from the CDN -->
     <script src="https://unpkg.com/filepond-polyfill/dist/filepond-polyfill.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+    <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
 
     <!-- Get FilePond JavaScript from the CDN -->
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script>
-    
-    // Set default server location
-    FilePond.setOptions({
-        server: 'api/'
-    });
 
-    // Create ponds on the page
-    var pond = FilePond.create( document.querySelector('input[type="file"]') );
+        let submitFn = (key)=>{
+            var request = new XMLHttpRequest();
+            request.open('POST', 'api/submit.php', true);
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+            request.onload = function (resp) {
+                console.log(request.responseText);
+            };
+            request.send(`filepond%5B0%5D=${key}`);
+        };
+
+        FilePond.registerPlugin(
+            FilePondPluginFileValidateType,
+            FilePondPluginImageResize,
+            FilePondPluginImageTransform
+        );
+        // Set default server location
+        FilePond.setOptions({
+            server: {
+                url: 'api/',
+                process: {
+                    url: './',
+                    onload: function (response) {
+                        console.log(response);
+                        submitFn(response);
+                        updateGrid();
+                        return response;// response.key;
+                    }
+                }
+            },
+            labelIdle: `<span class="filepond--label-action">Add your picture</span>`,
+            imageResizeTargetHeight: 400,
+            imageResizeTargetWidth: 600
+        });
+
+        // Create ponds on the page
+        var pond = FilePond.create(document.querySelector('input[type="file"]'));
+
+
+        addEvent = (el, type, handler) => {
+            if (el.attachEvent) { el.attachEvent('on' + type, handler); } else { el.addEventListener(type, handler); }
+        };
+
 
     </script>
-
+<script src="gallery.js"></script>
 </body>
+
 </html>

@@ -8,7 +8,9 @@ header('Access-Control-Allow-Methods: POST');
 
 // Load the FilePond helper class
 require_once('FilePond/RequestHandler.class.php');
-
+error_log(var_export($_POST,true));
+error_log(http_build_query($_POST));
+error_log(var_export(headers_list(),true));
 // catch server exceptions and auto jump to 500 response code if caught
 FilePond\RequestHandler::catchExceptions();
 
